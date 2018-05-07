@@ -1,0 +1,102 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", {packages: ["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Name', 'Amount'],
+            {{# each globalLanguages}}
+                ['{{this.name}} - {{this.percentage}}%',     {{this.amount}}],
+            {{/each}}
+        ]);
+
+        var options = {
+            pieHole: 0.5,
+            pieSliceText: "none"
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        chart.draw(data, options);
+    }
+</script>
+
+<header>
+    <nav class="navbar navbar-light bg-white d-flex justify-content-center p-3 mt-5">
+        <a class="navbar-brand">Search for github user's informations!</a>
+        <form class="form-inline col-12 d-flex justify-content-center p-2" action="/submit" method="post">
+            <input class="form-control mr-sm-2 col-4" type="text" name="userName" placeholder="Search by user name..."
+                   aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0 col-1" type="submit">Search</button>
+        </form>
+    </nav>
+</header>
+
+{{#if renderInfo}}
+    {{#if error}}
+        <div class="alert alert-warning alert-dismissible fade show my-4 mx-auto col-6" role="alert">
+            {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {{else}}
+        <div class="container-fluid d-flex justify-content-center">
+            <article class="card col-11 my-5 p-0">
+                <h5 class="card-header d-flex justify-content-between">
+                    <p>Informations about: <span class="font-weight-light">{{userName}}</span></p>
+                    <p>Email: <span class="font-weight-light">{{ userEmail }}</span></p>
+                </h5>
+                <div class="card-body">
+                    {{#if conditionRepos}}
+                            <div class="row">
+                                <section class="col-4">
+                                    <h4 class="card-title text-center"><i>Public repositories: <br>(with main language) </i></h4>
+                                    <div class="list-group scroll mt-5">
+                                        {{# each userRepos}}
+                                            <p class="list-group-item text-center">{{this.node.name}} - {{#if
+                                                    this.node.primaryLanguage.name}} {{this.node.primaryLanguage.name}} {{else}}
+                                                No code in here! {{/if}}</p>
+                                        {{/each}}
+                                    </div>
+                                </section>
+                                <section class="col-8" style="padding: 0">
+                                    {{#if globalLanguages}}
+                                        <h4 class="card-title text-center"><i>Global language statistics for all user's repositories:</i></h4>
+                                        <figure class="donutchart" id="donutchart"></figure>
+                                        {{#if conditionRest}}
+                                            <div class="btn-group dropup col-12 d-flex justify-content-end">
+                                                <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Other languages
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    {{# each langRest}}
+                                                        <a class="dropdown-item" href="#">{{this.name}} -  {{this.percentage}}%</a>
+                                                    {{/each}}
+                                                </div>
+                                            </div>
+                                        {{/if}}
+                                    {{else}}
+                                        <div class="alert alert-info alert-dismissible fade show mt-3 mx-auto col-10" role="alert">
+                                            <h3>This user does not have any language data!</h3>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                    {{/if}}
+                                </section>
+                            </div>
+                    {{else}}
+                            <div class="alert alert-info alert-dismissible fade show mt-3 mx-auto col-8" role="alert">
+                                <h3>This user does not have any public repositories!</h3>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                    {{/if}}
+                </div>
+            </article>
+        </div>
+    {{/if}}
+{{/if}}

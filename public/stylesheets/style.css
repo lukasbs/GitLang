@@ -1,0 +1,33 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: no-repeat linear-gradient(141deg, #0fb8ad 0%, #1fc8db 41%, #2cb5e8 61%);
+}
+
+.navbar-brand{
+  font-size: 42px !important;
+}
+
+.scroll{
+  height: 450px;
+  overflow: auto;
+}
+
+.donutchart{
+  height: 400px;
+  width: 800px;
+}
+
+.list-group{
+  border-style: solid;
+  border-radius: 5px;
+  border-color: gray;
+}
+
+.card{
+  border: transparent !important;
+}
